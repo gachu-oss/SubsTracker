@@ -1,0 +1,15 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  color: #ffffff;
+  min-height: 100vh;
+  background: 
+    linear-gradient(rgba(10, 14, 23, 0.90), rgba(10, 14, 23, 0.92)),
+    url('js/b image/background.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
