@@ -41,3 +41,10 @@ export function updateSubscription(id, subscriptionData) {
     .update(subscriptionData)
     .eq('id', id);
 } 
+
+export function deleteSubscription(id) {
+  return client
+    .from('subscriptions')
+    .delete()
+    .eq('id', id);
+}
