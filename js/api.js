@@ -34,3 +34,10 @@ export function createSubscription(subscriptionData) {
     .from('subscriptions')
     .insert([subscriptionData]);
 }
+
+export function updateSubscription(id, subscriptionData) {
+  return client
+    .from('subscriptions')
+    .update(subscriptionData)
+    .eq('id', id);
+} 
