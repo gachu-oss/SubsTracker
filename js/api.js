@@ -28,3 +28,9 @@ export function getSubscriptions() {
     .select('*')
     .order('id', { ascending: false });
 }
+
+export function createSubscription(subscriptionData) {
+  return client
+    .from('subscriptions')
+    .insert([subscriptionData]);
+}
