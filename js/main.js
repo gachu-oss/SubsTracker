@@ -125,3 +125,113 @@ async function setUser(user) {
     loadData();
   }
 }
+// CRUDE controler functions
+
+async function loadData() {
+  const { data, error } = await getSubscriptions();
+  if (error) {
+    alert('Error loading subscriptions: ' + error.message);
+    return;
+  }
+  subscriptions = data || [];
+  refreshList();
+}
+
+function refreshList() {
+  renderSubscriptions(subList, totalSpend, subscriptions, filterStatus.value, currentCurrency, exchangeRates);
+}
+
+// Currency Selector Listener (Live conversion)
+currencySelector.addEventListener('change', (e) => {
+  currentCurrency = e.target.value;
+  refreshList();
+});
+
+// Submit Form (Add or Edit)
+subForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const name = subName.value.trim();
+  const cost = subCost.value;
+  const renewal = subRenewal.value;
+
+  // Validate using utils.js
+  const validation = validateSubscription(name, cost, renewal);
+  if (!validation.isValid) {
+    alert(validation.message);
+    return;
+  }
+
+  const payload = {
+    name,
+    cost: parseFloat(cost),
+    category: subCategory.value,
+    renewal,
+    status: subStatus.value,
+    user_id: currentUser.id
+  };
+
+  const id = subId.value;
+  if (id) {
+    // UPDATE
+    await updateSubscription(id, payload);
+  } else {
+    // CREATE
+    await createSubscription(payload);
+  }
+
+  resetForm();
+  await loadData();
+});
+
+// Populate Form for Editing
+function startEdit(id) {
+  const item = subscriptions.find(s => s.id == id);
+  if (!item) return;
+
+  subId.value = item.id;
+  subName.value = item.name;
+  subCost.value = item.cost;
+  subCategory.value = item.category;
+  subRenewal.value = item.renewal;
+  subStatus.value = item.status;
+
+  formTitle.textContent = 'Edit Subscription';
+  saveBtn.textContent = 'Update Subscription';
+  cancelBtn.classList.remove('hidden');
+}
+
+// Reset Form
+function resetForm() {
+  subForm.reset();
+  subId.value = '';
+  formTitle.textContent = 'Add Subscription';
+  saveBtn.textContent = 'Save Subscription';
+  cancelBtn.classList.add('hidden');
+}
+
+cancelBtn.addEventListener('click', resetForm);
+
+// Handle Edit & Delete button clicks via delegation
+subList.addEventListener('click', async (e) => {
+  const id = e.target.dataset.id;
+  if (!id) return;
+
+  if (e.target.classList.contains('edit-btn')) {
+    startEdit(id);
+  } else if (e.target.classList.contains('delete-btn')) {
+    if (!confirm('Are you sure you want to delete this subscription?')) return;
+    await deleteSubscription(id);
+    await loadData();
+  }
+});
+
+// Filter dropdown change
+filterStatus.addEventListener('change', refreshList);
+
+// Check Session on page load
+getCurrentSession().then(({ data }) => {
+  if (data?.session) {
+    setUser(data.session.user);
+  }
+});
