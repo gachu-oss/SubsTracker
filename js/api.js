@@ -20,3 +20,11 @@ export function signOutUser() {
 export function getCurrentSession() {
   return client.auth.getSession();
 }
+
+// database CRUD method
+export function getSubscriptions() {
+  return client
+    .from('subscriptions')
+    .select('*')
+    .order('id', { ascending: false });
+}
