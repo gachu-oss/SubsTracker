@@ -48,3 +48,17 @@ export function deleteSubscription(id) {
     .delete()
     .eq('id', id);
 }
+
+// fetch live currency rates from ExchangeRate-API
+
+import { EXCHANGE_RATE_API_KEY } from '../config.js';
+
+export async function fetchExchangeRates() {
+  const url = `https://v6.exchangerate-api.com/v6/${EXCHANGE_RATE_API_KEY}/latest/USD`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error('Failed to fetch exchange rates');
+  }
+  const data = await response.json();
+  return data.conversion_rates;
+}
