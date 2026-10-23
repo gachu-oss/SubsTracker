@@ -1,9 +1,7 @@
 // import calculations from utils.js
-
-
 import { calculateTotal, convertAmount, formatCurrency } from './utils.js';
 
-// Display  ui depending on logged status
+// Display ui depending on logged status
 export function updateUserView(user, elements) {
   const { authBox, dashboard, userArea, userEmail, subList } = elements;
 
@@ -20,28 +18,29 @@ export function updateUserView(user, elements) {
   }
 }
 
-// updates of  subscription lists and  monthly spend
-
+// updates of subscription lists and monthly spend
 export function renderSubscriptions(subList, totalSpendEl, subscriptions, filter, currencyCode = 'USD', rates = null) {
   // 1. Calculate and convert total monthly spend
   const baseTotalUSD = calculateTotal(subscriptions);
   const convertedTotal = convertAmount(baseTotalUSD, currencyCode, rates);
   totalSpendEl.textContent = formatCurrency(convertedTotal, currencyCode);
 
-//   Filter list
-let visible = subscriptions;
+  
+  let visible = subscriptions;
   if (filter !== 'all') {
     visible = subscriptions.filter(sub => sub.status === filter);
- }
+  }
 
-// Clear container
-if (visible.length === 0) {
+  // 3. Clear container (THIS WAS MISSING)
+  subList.innerHTML = '';
+
+  if (visible.length === 0) {
     subList.innerHTML = '<li class="empty">No subscriptions found.</li>';
     return;
   }
 
-//   Render cards with converted costs
-visible.forEach(item => {
+  // 4. Render cards with converted costs
+  visible.forEach(item => {
     const convertedCost = convertAmount(item.cost, currencyCode, rates);
     const costText = formatCurrency(convertedCost, currencyCode);
 
@@ -60,4 +59,4 @@ visible.forEach(item => {
     `;
     subList.appendChild(li);
   });
-}  
+}
