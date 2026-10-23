@@ -14,7 +14,7 @@ import {
 } from './api.js';
 
 import { validateSubscription } from './utils.js';
-import { updateUserView, renderSubscriptions } from './ui.js';
+import { updateUserView, renderSubscriptions, renderCalendar } from './ui.js';
 
 // Application State
 let currentUser = null;
@@ -22,6 +22,7 @@ let subscriptions = [];
 let isSignUp = false;
 let currentCurrency = 'USD';
 let exchangeRates = null;
+let calendarDate = new Date();
 
 // DOM Elements
 const authBox = document.getElementById('authBox');
@@ -55,6 +56,8 @@ const subList = document.getElementById('subList');
 const filterStatus = document.getElementById('filterStatus');
 const totalSpend = document.getElementById('totalSpend');
 const currencySelector = document.getElementById('currencySelector');
+const prevMonthBtn = document.getElementById('prevMonthBtn');
+const nextMonthBtn = document.getElementById('nextMonthBtn');
 
 const uiElements = { authBox, dashboard, userArea, userEmail, subList };
 
@@ -125,7 +128,7 @@ async function setUser(user) {
     loadData();
   }
 }
-// CRUDE controler functions
+
 
 async function loadData() {
   const { data, error } = await getSubscriptions();
@@ -139,6 +142,22 @@ async function loadData() {
 
 function refreshList() {
   renderSubscriptions(subList, totalSpend, subscriptions, filterStatus.value, currentCurrency, exchangeRates);
+  renderCalendar(subscriptions, calendarDate, currentCurrency, exchangeRates);
+}
+
+// Calendar Month Navigation
+if (prevMonthBtn) {
+  prevMonthBtn.addEventListener('click', () => {
+    calendarDate.setMonth(calendarDate.getMonth() - 1);
+    renderCalendar(subscriptions, calendarDate, currentCurrency, exchangeRates);
+  });
+}
+
+if (nextMonthBtn) {
+  nextMonthBtn.addEventListener('click', () => {
+    calendarDate.setMonth(calendarDate.getMonth() + 1);
+    renderCalendar(subscriptions, calendarDate, currentCurrency, exchangeRates);
+  });
 }
 
 // Currency Selector Listener (Live conversion)
