@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,12 @@
   <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
 
   <!-- Top Bar -->
   <header class="top-bar">
-    <h1>SubsTracker</h1>
+    <h1> SubsTracker</h1>
     <div id="userArea" class="hidden">
       <span id="userEmail"></span>
       <button id="logoutBtn">Logout</button>
@@ -71,55 +73,108 @@
         </div>
       </div>
 
-      <!-- Add/Edit Subscription Form -->
-      <div class="card">
-        <h2 id="formTitle">Add Subscription</h2>
+      <!-- Dashboard 2-Column Grid Layout -->
+      <div class="dashboard-grid">
 
-        <form id="subForm">
-          <input type="hidden" id="subId">
+        <!-- Left Column: Add Subscription & Your Subscriptions (Bigger) -->
+        <div class="dashboard-left">
 
-          <label>Service Name</label>
-          <input type="text" id="subName" placeholder="e.g. Netflix" required>
+          <!-- Add/Edit Subscription Form -->
+          <div class="card">
+            <h2 id="formTitle">Add Subscription</h2>
 
-          <label>Monthly Cost ($)</label>
-          <input type="number" id="subCost" placeholder="9.99" step="0.01" min="0.01" required>
+            <form id="subForm">
+              <input type="hidden" id="subId">
 
-          <label>Category</label>
-          <select id="subCategory">
-            <option value="Entertainment">Entertainment</option>
-            <option value="Music">Music</option>
-            <option value="Fitness">Fitness</option>
-            <option value="Cloud & Tools">Cloud & Tools</option>
-          </select>
+              <div class="form-row">
+                <div class="form-col">
+                  <label for="subName">Service Name</label>
+                  <input type="text" id="subName" placeholder="e.g. Netflix" required>
+                </div>
+                <div class="form-col">
+                  <label for="subCost">Monthly Cost ($)</label>
+                  <input type="number" id="subCost" placeholder="9.99" step="0.01" min="0.01" required>
+                </div>
+              </div>
 
-          <label>Renewal Date</label>
-          <input type="date" id="subRenewal" required>
+              <div class="form-row">
+                <div class="form-col">
+                  <label for="subCategory">Category</label>
+                  <select id="subCategory">
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Music">Music</option>
+                    <option value="Fitness">Fitness</option>
+                    <option value="Cloud & Tools">Cloud & Tools</option>
+                  </select>
+                </div>
+                <div class="form-col">
+                  <label for="subRenewal">Renewal Date</label>
+                  <input type="date" id="subRenewal" required>
+                </div>
+              </div>
 
-          <label>Status</label>
-          <select id="subStatus">
-            <option value="Active">Active</option>
-            <option value="Paused">Paused</option>
-            <option value="Canceled">Canceled</option>
-          </select>
+              <div class="form-row form-row-bottom">
+                <div class="form-col">
+                  <label for="subStatus">Status</label>
+                  <select id="subStatus">
+                    <option value="Active">Active</option>
+                    <option value="Paused">Paused</option>
+                    <option value="Canceled">Canceled</option>
+                  </select>
+                </div>
+                <div class="form-col form-actions">
+                  <button type="submit" id="saveBtn">Save Subscription</button>
+                  <button type="button" id="cancelBtn" class="secondary-btn hidden">Cancel</button>
+                </div>
+              </div>
+            </form>
+          </div>
 
-          <button type="submit" id="saveBtn">Save Subscription</button>
-          <button type="button" id="cancelBtn" class="secondary-btn hidden">Cancel</button>
-        </form>
-      </div>
+          <!-- Subscription List -->
+          <div class="card sub-list-card">
+            <div class="list-header">
+              <h2>Your Subscriptions</h2>
+              <select id="filterStatus">
+                <option value="all">All</option>
+                <option value="Active">Active</option>
+                <option value="Paused">Paused</option>
+                <option value="Canceled">Canceled</option>
+              </select>
+            </div>
 
-      <!-- Subscription List -->
-      <div class="card">
-        <div class="list-header">
-          <h2>Your Subscriptions</h2>
-          <select id="filterStatus">
-            <option value="all">All</option>
-            <option value="Active">Active</option>
-            <option value="Paused">Paused</option>
-            <option value="Canceled">Canceled</option>
-          </select>
+            <ul id="subList"></ul>
+          </div>
+
         </div>
 
-        <ul id="subList"></ul>
+        <!-- Right Column: Renewal Calendar -->
+        <div class="dashboard-right">
+          <!-- Renewal Calendar Card -->
+          <div class="card calendar-card">
+            <div class="calendar-header">
+              <div class="cal-nav-group">
+                <button type="button" id="prevMonthBtn" class="cal-nav-btn" title="Previous Month">‹</button>
+                <h2 id="calMonthTitle">Renewal Calendar</h2>
+                <button type="button" id="nextMonthBtn" class="cal-nav-btn" title="Next Month">›</button>
+              </div>
+            </div>
+
+            <!-- 7 Days of the week -->
+            <div class="calendar-grid-header">
+              <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+            </div>
+
+            <!-- Days 1 to 31 injected by JS -->
+            <div id="calendarDays" class="calendar-grid"></div>
+
+            <!-- Month Renewals & Day Details -->
+            <div id="calDetails" class="cal-details-box"></div>
+
+            <!-- Next Due Notice -->
+            <div id="nextDueNotice" class="next-due-box">No active subscriptions.</div>
+          </div>
+        </div>
+
       </div>
 
     </div>
@@ -128,4 +183,5 @@
 
   <script type="module" src="js/main.js"></script>
 </body>
+
 </html>
