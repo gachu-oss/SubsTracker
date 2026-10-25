@@ -1,13 +1,16 @@
-// import calculations from utils.js
+// ui.js - DOM Rendering and UI Display Helpers
 import { calculateTotal, convertAmount, formatCurrency } from './utils.js';
 
-// Display ui depending on logged status
+/**
+ * Updates the screen depending on whether a user is logged in
+ */
 export function updateUserView(user, elements) {
   const { authBox, dashboard, userArea, userEmail, subList } = elements;
 
   if (user) {
     authBox.classList.add('hidden');
     dashboard.classList.remove('hidden');
+
     userArea.classList.remove('hidden');
     userEmail.textContent = user.email;
   } else {
@@ -18,20 +21,22 @@ export function updateUserView(user, elements) {
   }
 }
 
-// updates of subscription lists and monthly spend
+/**
+ * Renders the subscription list items and updates total monthly spend
+ */
 export function renderSubscriptions(subList, totalSpendEl, subscriptions, filter, currencyCode = 'USD', rates = null) {
   // 1. Calculate and convert total monthly spend
   const baseTotalUSD = calculateTotal(subscriptions);
   const convertedTotal = convertAmount(baseTotalUSD, currencyCode, rates);
   totalSpendEl.textContent = formatCurrency(convertedTotal, currencyCode);
 
-  
+  // 2. Filter list
   let visible = subscriptions;
   if (filter !== 'all') {
     visible = subscriptions.filter(sub => sub.status === filter);
   }
 
-  // 3. Clear container (THIS WAS MISSING)
+  // 3. Clear container before rendering new items
   subList.innerHTML = '';
 
   if (visible.length === 0) {
@@ -43,6 +48,8 @@ export function renderSubscriptions(subList, totalSpendEl, subscriptions, filter
   visible.forEach(item => {
     const convertedCost = convertAmount(item.cost, currencyCode, rates);
     const costText = formatCurrency(convertedCost, currencyCode);
+    const toggleText = item.status === 'Active' ? 'Pause' : 'Activate';
+    const nextStatus = item.status === 'Active' ? 'Paused' : 'Active';
 
     const li = document.createElement('li');
     li.className = 'sub-item';
@@ -53,6 +60,7 @@ export function renderSubscriptions(subList, totalSpendEl, subscriptions, filter
       </div>
       <div class="sub-right">
         <span class="cost">${costText}/mo</span>
+        <button class="toggle-btn" data-id="${item.id}" data-next-status="${nextStatus}">${toggleText}</button>
         <button class="edit-btn" data-id="${item.id}">Edit</button>
         <button class="delete-btn" data-id="${item.id}">Delete</button>
       </div>
@@ -287,4 +295,3 @@ export function renderCalendar(subscriptions, viewDate = new Date(), currencyCod
     }
   }
 }
-

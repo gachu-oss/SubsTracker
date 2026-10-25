@@ -1,4 +1,4 @@
-// calculation of total total monthly spend for Active subscriptions
+
 export function calculateTotal(subscriptions) {
   if (!Array.isArray(subscriptions)) return 0;
   let total = 0;
@@ -11,7 +11,7 @@ export function calculateTotal(subscriptions) {
   return total;
 }
 
-// validation of subscription forms
+
 export function validateSubscription(name, cost, renewal) {
   if (!name || name.trim() === '') {
     return { isValid: false, message: 'Please enter a subscription service name.' };
@@ -26,7 +26,7 @@ export function validateSubscription(name, cost, renewal) {
   return { isValid: true };
 }
 
-// convercion of currency
+
 export function convertAmount(amountInUSD, currencyCode, rates) {
   const num = parseFloat(amountInUSD) || 0;
   if (!rates || !rates[currencyCode] || currencyCode === 'USD') {
@@ -35,7 +35,7 @@ export function convertAmount(amountInUSD, currencyCode, rates) {
   return num * rates[currencyCode];
 }
 
-// return formatted currency string
+
 export function formatCurrency(amount, currencyCode = 'USD') {
   const num = parseFloat(amount) || 0;
   const symbols = {

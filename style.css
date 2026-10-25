@@ -13,7 +13,7 @@ body {
   color: #ffffff;
   min-height: 100vh;
   background:
-    linear-gradient(rgba(10, 14, 23, 0.65), rgba(10, 14, 23, 0.70)),
+    linear-gradient(rgba(10, 14, 23, 0.90), rgba(10, 14, 23, 0.92)),
     url('js/b%20image/background.jpg') no-repeat center center fixed;
   background-size: cover;
 }
@@ -379,6 +379,13 @@ button:hover {
   margin-top: 0;
   padding: 5px 10px;
   font-size: 12px;
+}
+
+.toggle-btn {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  margin-right: 6px;
 }
 
 .cost {

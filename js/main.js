@@ -9,6 +9,7 @@ import {
   getSubscriptions,
   createSubscription,
   updateSubscription,
+  patchSubscriptionStatus,
   deleteSubscription,
   fetchExchangeRates
 } from './api.js';
@@ -130,14 +131,17 @@ async function setUser(user) {
 }
 
 
+// CRUD CONTROLLER
+
+
 async function loadData() {
-  const { data, error } = await getSubscriptions();
-  if (error) {
-    alert('Error loading subscriptions: ' + error.message);
-    return;
+  try {
+    const data = await getSubscriptions();
+    subscriptions = data || [];
+    refreshList();
+  } catch (error) {
+    console.error('Error loading subscriptions:', error);
   }
-  subscriptions = data || [];
-  refreshList();
 }
 
 function refreshList() {
@@ -231,14 +235,20 @@ function resetForm() {
 
 cancelBtn.addEventListener('click', resetForm);
 
-// Handle Edit & Delete button clicks via delegation
+// Handle Edit, Toggle (PATCH), & Delete button clicks via delegation
 subList.addEventListener('click', async (e) => {
   const id = e.target.dataset.id;
   if (!id) return;
 
   if (e.target.classList.contains('edit-btn')) {
     startEdit(id);
+  } else if (e.target.classList.contains('toggle-btn')) {
+    // HTTP PATCH: Toggle status
+    const nextStatus = e.target.dataset.nextStatus;
+    await patchSubscriptionStatus(id, nextStatus);
+    await loadData();
   } else if (e.target.classList.contains('delete-btn')) {
+    // HTTP DELETE
     if (!confirm('Are you sure you want to delete this subscription?')) return;
     await deleteSubscription(id);
     await loadData();

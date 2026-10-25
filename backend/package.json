@@ -1,0 +1,12 @@
+{
+  "name": "substracker-backend",
+  "version": "1.0.0",
+  "description": "Mock REST API backend for SubsTracker",
+  "main": "db.json",
+  "scripts": {
+    "start": "json-server --watch db.json --host 0.0.0.0 --port $PORT"
+  },
+  "dependencies": {
+    "json-server": "^0.17.4"
+  }
+}
