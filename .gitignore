@@ -1,0 +1,4 @@
+# hide
+.env
+/node_modules/
+/coverage/
