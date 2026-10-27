@@ -49,3 +49,10 @@ npm run test:coverage
 ```
 
 Result: 13 tests pass
+
+
+TO run email ressend  "
+    firstly go to the subscriptions  then edit  any to  2 days  ahead  of the current date 
+    then ,
+'''bash    
+node send-reminder.js
